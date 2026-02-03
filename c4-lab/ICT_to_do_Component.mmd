@@ -1,0 +1,31 @@
+C4Component
+title Component diagram for ICT To Do List - Web API
+
+Container_Boundary(web_api, "Web API") {
+
+    Component(auth_controller, "Auth Controller", "FastAPI Controller", "Handles authentication and authorization")
+    Component(task_controller, "Task Controller", "FastAPI Controller", "Handles CRUD operations for tasks")
+    Component(sync_controller, "MyCourses Sync Controller", "FastAPI Controller", "Triggers and monitors MyCourses synchronization")
+
+    Component(auth_service, "Auth Service", "Service Layer", "Business logic for user authentication")
+    Component(task_service, "Task Service", "Service Layer", "Business logic for managing tasks")
+    Component(sync_service, "Sync Service", "Service Layer", "Handles data synchronization logic")
+
+    Component(user_repo, "User Repository", "Repository", "Manages user persistence")
+    Component(task_repo, "Task Repository", "Repository", "Manages task persistence")
+}
+
+Container(database, "Database", "PostgreSQL", "Stores users and tasks")
+System_Ext(mycourses, "MyCourses", "External ICT e-learning system")
+
+Rel(auth_controller, auth_service, "Uses")
+Rel(task_controller, task_service, "Uses")
+Rel(sync_controller, sync_service, "Uses")
+
+Rel(auth_service, user_repo, "Reads/Writes")
+Rel(task_service, task_repo, "Reads/Writes")
+Rel(sync_service, task_repo, "Stores synced tasks")
+
+Rel(user_repo, database, "Reads/Writes", "SQL")
+Rel(task_repo, database, "Reads/Writes", "SQL")
+Rel(sync_service, mycourses, "Retrieves assignments", "HTTPS / JSON")
